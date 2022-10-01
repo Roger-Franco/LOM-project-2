@@ -10,8 +10,9 @@
 * Instala o arquivo eslint
 
 - npm i -D prettier eslint-config-prettier eslint-plugin-prettier
-- npx eslint src/\*_/_.js --fix (Esse comando o eslint faz uma varredura e
-  corrige os arquivos)
+- "npx eslint src/\*\*/\*.js --fix" (Esse comando o eslint faz uma varredura e
+  corrige os arquivos) ta errado. quando salva troca o \* por \_. Lembrar de
+  descartar as '\'.
 - npm i prop-types
 
 * Importante: se você usar a extensão do VS Code para o "Prettier", aponte o
