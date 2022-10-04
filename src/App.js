@@ -1,75 +1,46 @@
 import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+const eventFn = () => {
+  console.log('h1 clicado');
+};
 
 function App() {
-  /* ==== Minha solução === */
-  // const [reverseClass, setReverseClass] = useState('App-logo');
-  // const handleClick = () => {
-  //   if (reverseClass === 'App-logo') {
-  //     setReverseClass('reverse');
-  //   } else {
-  //     setReverseClass('App-logo');
-  //   }
-  // };
-  /* ========== */
-
-  const [reverse, setReverse] = useState(false);
   const [counter, setCounter] = useState(0);
-  const reverseClass = reverse ? 'reverse' : '';
+  const [counter2, setCounter2] = useState(0);
 
-  const handleClick = () => {
-    setReverse(!reverse);
-    setCounter(counter + 1);
-  };
+  // componentDidUpdate - executa toda vez que o componente atualiza;
+  useEffect(() => {
+    console.log('componentDidUpdate');
+  });
+
+  // componentDidMount - executa uma vez;
+  useEffect(() => {
+    console.log('componentDidMount');
+  }, []);
+
+  // componentDidMount - executa toda vez que dependência mudar;
+  useEffect(() => {
+    console.log('Contador mudou para', counter2);
+  }, [counter2]);
+
+  // componentWillUmount - Faz uma limpeza para que não haja repetições
+  // indesejadas
+  useEffect(() => {
+    document.querySelector('h1')?.addEventListener('click', eventFn);
+    return () => {
+      document.querySelector('h1')?.removeEventListener('click', eventFn);
+    };
+  }, []);
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className={`App-logo ${reverseClass}`} alt="logo" />
-        <h1>{counter}</h1>
-        <button onClick={handleClick}>Reverse {reverseClass}</button>
-      </header>
+      <h1>Contador: {counter}</h1>
+      <button onClick={() => setCounter(counter + 1)}>Increment + 1</button>
+      <button onClick={() => setCounter2(counter2 + 2)}>Increment + 2 </button>
     </div>
   );
 }
 
 export default App;
-/*  Com classe */
-
-// import logo from './logo.svg';
-// import './App.css';
-// import { Component } from 'react';
-
-// class App extends Component {
-//   constructor(props) {
-//     super(props);
-//     // this.handleClick = this.handleClick.bind(this);
-
-//     this.state = {
-//       reverse: false,
-//     };
-//   }
-
-//   handleClick = () => {
-//     this.setState({ reverse: !this.state.reverse });
-//   };
-
-//   render() {
-//     const { reverse } = this.state;
-//     const reverseClass = reverse ? 'reverse' : '';
-//     return (
-//       <div className="App">
-//         <header className="App-header">
-//           <img src={logo} className={`App-logo ${reverseClass}`} alt="logo" />
-
-//           <button type="button" onClick={this.handleClick}>
-//             Reverse {reverseClass}
-//           </button>
-//         </header>
-//       </div>
-//     );
-//   }
-// }
-
-// export default App;
