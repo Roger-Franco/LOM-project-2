@@ -1,32 +1,59 @@
 import logo from './logo.svg';
+import prop from 'prop-types';
 import './App.css';
-import { memo, useCallback, useEffect, useState } from 'react';
-import Prop from 'prop-types';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+// useMemo não propaga a renderização do componente Pai para o Filho
 
-const Button = memo(function Button({ incrementButton }) {
+const Post = ({ post }) => {
   console.log('Filho renderizou!');
-  return <button onClick={() => incrementButton(100)}>+</button>;
-});
+  return (
+    <div key={post.id} className="post">
+      <h1>{post.title}</h1>
+      <p>{post.body}</p>
+    </div>
+  );
+};
+
+Post.propTypes = {
+  post: prop.shape({
+    id: prop.number,
+    title: prop.string,
+    body: prop.string,
+  }),
+};
 
 function App() {
-  const [counter, setCounter] = useState(0);
-
-  const incrementCounter = useCallback((num) => {
-    setCounter((c) => c + num); // Artifício usado pra não precisar de colocar counter como dependência
-  }, []);
-
+  const [posts, setPosts] = useState([]);
+  const [value, setValue] = useState('');
   console.log('Pai renderizou!');
+
+  useEffect(() => {
+    setTimeout(() => {
+      fetch('https://jsonplaceholder.typicode.com/posts')
+        .then((r) => r.json())
+        .then((r) => setPosts(r));
+    }, 5000);
+  }, []); // 10: 40
 
   return (
     <div className="App">
-      <h1>Contador: {counter}</h1>
-      <Button incrementButton={incrementCounter} />
+      <p>
+        <input
+          type="search"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        />
+      </p>
+      <h1>Opa</h1>
+      {useMemo(() => {
+        return (
+          posts.length > 0 &&
+          posts.map((post) => <Post key={post.id} post={post} />)
+        );
+      }, [posts])}
+      {posts.length <= 0 && <p>Ainda não há posts</p>}
     </div>
   );
 }
-
-Button.propTypes = {
-  incrementButton: Prop.func,
-};
 
 export default App;
